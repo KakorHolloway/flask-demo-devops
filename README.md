@@ -1,0 +1,1 @@
+# Project to help understand DevOps and CI/CD mecanisms
