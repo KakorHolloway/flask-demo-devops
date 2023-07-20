@@ -1,2 +1,4 @@
 mysql:
   nomservice: db
+flask:
+  image: harbor.kakor.ovh/public/sqltest:latest

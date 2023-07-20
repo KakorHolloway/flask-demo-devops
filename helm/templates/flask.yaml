@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: flask
-        image: harbor.kakor.ovh/public/sqltest:$CI_COMMIT_TAG
+        image: {{ .Values.flask.image }}
         ports:
         - containerPort: 5000
       imagePullSecrets:
