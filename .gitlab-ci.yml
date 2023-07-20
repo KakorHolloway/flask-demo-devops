@@ -1,0 +1,29 @@
+default:
+  image: alpine/helm
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint: [""]
+  script:
+    - echo "{\"auths\":{\"harbor.kakor.ovh\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json 
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "harbor.kakor.ovh/public/sqltest:${CI_COMMIT_TAG}"
+  rules:
+    - if: $CI_COMMIT_TAG
+
+deploy:
+  stage: deploy
+  image:
+    name: alpine/helm
+  script:
+    - helm upgrade --install monprojet ${CI_PROJECT_DIR}/helm
+  rules:
+    - if: $CI_COMMIT_TAG
